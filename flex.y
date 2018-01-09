@@ -44,7 +44,7 @@ statement		: assignment
 				| io_statement
 				;
 
-assignment		: identifier assign expression semicolon
+assignment		: type identifier assign expression semicolon
 				;
 
 io_statement	: read_t open_brackets identifier close_brackets semicolon
@@ -64,7 +64,7 @@ loop			: for_t open_brackets type identifier colon range close_brackets
 				;
 
 range			: identifier
-				| range_t open_brackets constant colon constant close_brackets
+				| range_t open_brackets constant next constant close_brackets
 				;
 
 declaration 	: type identifier assign expression

@@ -1,15 +1,4 @@
-Int test = 1;
-String myString = "test";
-
-for(Int index : range(0, 10)) {
-    print(index);
-}
-
-if(test == 1) {
-    print(test);
-} else {
-    print(myString);
-}
-
-String fromConsole = read();
-
+Int testInt = 4 + 3;
+String testString = "testString";
+if(3 == 4) { print(4); }
+for(Int index: range(1, 2)) { print(index); }
