@@ -16,6 +16,16 @@ void updateSymbolWithValue(int value, char symbol);
 
 %start program
 
+%token if_t else_t for_t read_t print_t range_t int_t string_t 
+%token assign semicolon open_brackets close_brackets colon
+%token open_special_brackets close_special_brackets
+%token less greater less_or_equal greater_or_equal equal not_equal
+%token plus minus division multiply
+%token quote next
+
+%token identifier
+%token constant
+
 %token <integer> INTEGER
 %token <text> STRING 
 
@@ -34,49 +44,44 @@ statement		: assignment
 				| io_statement
 				;
 
-assignment		: identifier '=' expression ';'
+assignment		: identifier assign expression semicolon
 				;
 
-io_statement	: "read" '(' identifier ')' ';'
-				| "print" '(' expression ')' ';'	
+io_statement	: read_t open_brackets identifier close_brackets semicolon
+				| print_t open_brackets expression close_brackets semicolon
 				;
 
 control			: conditional
 				| loop
 				;
 
-conditional		: "if" '(' expression ')' '{' block '}'
+conditional		: if_t open_brackets expression close_brackets 
+				  open_special_brackets block close_special_brackets
 				;
 
-loop			: "for" '(' type identifier ':' range ')' '{' block '}'
+loop			: for_t open_brackets type identifier colon range close_brackets
+				  open_special_brackets block close_special_brackets
 				;
 
 range			: identifier
-				| "range" '(' constant ':' constant ')'
+				| range_t open_brackets constant colon constant close_brackets
 				;
 
-declaration 	: type identifier '=' expression
+declaration 	: type identifier assign expression
 			 	| type identifier
 			 	;
 
-type 		 	: "Int"
-			  	| "String"
+type 		 	: int_t
+			  	| string_t
 				;
-
-identifier 		: "0"
-			 	;
-
-constant 	 	: "1"
-				| "\"" "1" "\""
-			 	;
  
 expression 	 	: sign_atom
 				| expression operation atom
-				| '(' expression ')'
+				| open_brackets expression close_brackets
 				;
 
 sign_atom 		: atom
-				| '-' atom
+				| minus atom
 				;
 
 atom			: identifier
@@ -86,21 +91,21 @@ operation		: low_operation
 				| high_operation
 				;
 
-low_operation 	: '+'
-				| '-'
+low_operation 	: plus
+				| minus
 				;
 
-high_operation 	: '/'
-				| '*'		
+high_operation 	: division
+				| multiply		
 				| relation
 				;
 
-relation		: "=="
-				| "!="
-				| ">="
-				| "<="
-				| ">"
-				| "<"
+relation		: equal
+				| not_equal
+				| greater_or_equal
+				| less_or_equal
+				| greater
+				| less
 				;
 
 %%
