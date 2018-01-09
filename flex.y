@@ -9,32 +9,99 @@ void updateSymbolWithValue(int value, char symbol);
 
 %}
 
-%union {int number; char id;}
+%union {
+	int integer;
+	char* text;
+}
+
 %start program
 
-%token print
-%token exit_command
-
-%token <number> constant
-%token <id> identifier
-
-%type <number> program atom
-%type <id> assignment
+%token <integer> INTEGER
+%token <text> STRING 
 
 %%
 
-program		: program print atom ';'	{printf("%d\n", $3);} 
-			| assignment ';'			{;}
-			| print atom ';'			{printf("%d\n", $2);}
-			| exit_command ';'			{exit(0);}
-			;
+program 	 	: 
+				| block program 
+			 	;
 
-assignment	: identifier '=' constant	{updateSymbolWithValue($3, $1);}
-			;
+block 		 	: declaration
+			 	| statement
+			 	;
 
-atom 		: identifier				{$$ = valueOfSymbol($1);}
-			| constant					{$$ = $1;}
-			;
+statement		: assignment
+				| control
+				| io_statement
+				;
+
+assignment		: identifier '=' expression ';'
+				;
+
+io_statement	: "read" '(' identifier ')' ';'
+				| "print" '(' expression ')' ';'	
+				;
+
+control			: conditional
+				| loop
+				;
+
+conditional		: "if" '(' expression ')' '{' block '}'
+				;
+
+loop			: "for" '(' type identifier ':' range ')' '{' block '}'
+				;
+
+range			: identifier
+				| "range" '(' constant ':' constant ')'
+				;
+
+declaration 	: type identifier '=' expression
+			 	| type identifier
+			 	;
+
+type 		 	: "Int"
+			  	| "String"
+				;
+
+identifier 		: "0"
+			 	;
+
+constant 	 	: "1"
+				| "\"" "1" "\""
+			 	;
+ 
+expression 	 	: sign_atom
+				| expression operation atom
+				| '(' expression ')'
+				;
+
+sign_atom 		: atom
+				| '-' atom
+				;
+
+atom			: identifier
+				| constant
+
+operation		: low_operation
+				| high_operation
+				;
+
+low_operation 	: '+'
+				| '-'
+				;
+
+high_operation 	: '/'
+				| '*'		
+				| relation
+				;
+
+relation		: "=="
+				| "!="
+				| ">="
+				| "<="
+				| ">"
+				| "<"
+				;
 
 %%
 

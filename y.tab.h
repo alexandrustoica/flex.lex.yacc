@@ -39,17 +39,13 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     print = 258,
-     exit_command = 259,
-     constant = 260,
-     identifier = 261
+     INTEGER = 258,
+     STRING = 259
    };
 #endif
 /* Tokens.  */
-#define print 258
-#define exit_command 259
-#define constant 260
-#define identifier 261
+#define INTEGER 258
+#define STRING 259
 
 
 
@@ -57,9 +53,12 @@
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
 #line 12 "flex.y"
-{int number; char id;}
+{
+	int integer;
+	char* text;
+}
 /* Line 1529 of yacc.c.  */
-#line 63 "y.tab.h"
+#line 62 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
